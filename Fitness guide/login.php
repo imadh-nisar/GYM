@@ -34,6 +34,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $result->fetch_assoc();
 
     if ($user && password_verify($password, $user['password'])) {
+        // Check if user is approved
+        if ($user['status'] === 'pending') {
+            header("Location: index.php?error=pending");
+            exit();
+        }
+        if ($user['status'] === 'rejected') {
+            header("Location: index.php?error=rejected");
+            exit();
+        }
+        if ($user['status'] === 'deleted') {
+            header("Location: index.php?error=deleted");
+            exit();
+        }
+
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_name'] = $user['username'];
         $_SESSION['user_email'] = $user['email'];

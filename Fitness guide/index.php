@@ -5,6 +5,29 @@ include "includes/db.php";
 // Simple landing page for GYMgeekS
 // Appointment form posts back to this page and shows a confirmation message.
 $appointmentSuccess = '';
+$loginError = '';
+
+// Handle login errors from redirect
+if (isset($_GET['error'])) {
+    switch ($_GET['error']) {
+        case 'empty':
+            $loginError = 'Please enter both username and password.';
+            break;
+        case 'invalid':
+            $loginError = 'Invalid username or password. Please try again.';
+            break;
+        case 'pending':
+            $loginError = 'Your account is pending approval. Please wait for an administrator to approve your registration.';
+            break;
+        case 'rejected':
+            $loginError = 'Your account registration was rejected. Please contact support for more information.';
+            break;
+        case 'deleted':
+            $loginError = 'Your account has been deactivated. Please contact support for assistance.';
+            break;
+    }
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['appointment_submit'])) {
     $username = trim($_POST['username'] ?? ($_SESSION['user_name'] ?? ''));
     $email = trim($_POST['email'] ?? '');
@@ -110,15 +133,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['appointment_submit'])
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
                     <li class="nav-item"><a class="nav-link" href="#benefits">Benefits</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#trainers">Trainers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#classes">Classes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#testimonials">Testimonials</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#pricing">Pricing</a></li>
                     <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
                     <li class="nav-item ms-2">
                         <a class="btn btn-outline-light btn-sm" href="members.php">Login</a>
-                    </li>
-                    <li class="nav-item ms-2 d-flex align-items-center">
-                        <button type="button" class="theme-toggle btn btn-light btn-sm" aria-label="Toggle theme">
-                            <i class="bi bi-moon-stars-fill"></i>
-                        </button>
                     </li>
                 </ul>
             </div>
@@ -127,6 +149,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['appointment_submit'])
 
     <header class="hero d-flex align-items-center" data-reveal>
         <div class="container text-white">
+            <!-- Login Error Alert -->
+            <?php if ($loginError): ?>
+                <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i><?= htmlspecialchars($loginError) ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
             <div class="row align-items-center">
                 <div class="col-lg-7">
                     <h1 class="display-4 fw-bold">Your Campus. <span
@@ -174,7 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['appointment_submit'])
             </div>
         </section>
 
-        <section id="benefits" class="bg-light py-5" data-reveal>
+        <section id="benefits" class="bg-dark py-5" data-reveal>
             <div class="container">
                 <h2 class="text-center mb-5">Why Work Out With Us?</h2>
                 <div class="row g-4">
@@ -218,7 +248,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['appointment_submit'])
             </div>
         </section>
 
-        <section id="trainers" class="py-5 bg-light" data-reveal>
+        <section id="trainers" class="py-5 bg-dark" data-reveal>
             <div class="container">
                 <h2 class="text-center mb-5">Meet Our Trainers</h2>
                 <div class="row g-4">
@@ -273,6 +303,189 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['appointment_submit'])
             </div>
         </section>
 
+        <section id="testimonials" class="py-5 bg-dark" data-reveal>
+            <div class="container">
+                <h2 class="text-center mb-5">What Our Members Say</h2>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                </div>
+                                <p class="card-text">"GYMgeekS transformed my fitness journey! The trainers are amazing
+                                    and the community is so supportive."</p>
+                                <h6 class="card-title mt-3">- Sarah K., Senior</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                </div>
+                                <p class="card-text">"Best gym on campus! Clean facilities, great equipment, and the
+                                    group classes are fantastic."</p>
+                                <h6 class="card-title mt-3">- Mike T., Graduate Student</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                </div>
+                                <p class="card-text">"Lost 20 pounds and gained confidence! The personalized plans
+                                    really work."</p>
+                                <h6 class="card-title mt-3">- Emily R., Freshman</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="pricing" class="py-5" data-reveal>
+            <div class="container">
+                <h2 class="text-center mb-5">Membership Plans</h2>
+                <div class="row g-4 justify-content-center">
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm border-primary">
+                            <div class="card-header bg-primary text-white text-center">
+                                <h4 class="mb-0">Student Basic</h4>
+                            </div>
+                            <div class="card-body text-center">
+                                <h3 class="text-primary">$29<span class="fs-6">/month</span></h3>
+                                <ul class="list-unstyled mt-3">
+                                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>24/7 Access
+                                    </li>
+                                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>All Equipment
+                                    </li>
+                                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Free WiFi</li>
+                                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Locker Room
+                                    </li>
+                                </ul>
+                                <button class="btn btn-primary w-100 mt-3">Get Started</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm border-success">
+                            <div class="card-header bg-success text-white text-center">
+                                <h4 class="mb-0">Student Premium</h4>
+                                <span class="badge bg-warning text-dark">Most Popular</span>
+                            </div>
+                            <div class="card-body text-center">
+                                <h3 class="text-success">$49<span class="fs-6">/month</span></h3>
+                                <ul class="list-unstyled mt-3">
+                                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Everything in
+                                        Basic</li>
+                                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Personal
+                                        Training (2x/month)</li>
+                                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Group Classes
+                                        Unlimited</li>
+                                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Nutrition
+                                        Consultation</li>
+                                </ul>
+                                <button class="btn btn-success w-100 mt-3">Get Started</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm border-info">
+                            <div class="card-header bg-info text-white text-center">
+                                <h4 class="mb-0">Faculty/Staff</h4>
+                            </div>
+                            <div class="card-body text-center">
+                                <h3 class="text-info">$39<span class="fs-6">/month</span></h3>
+                                <ul class="list-unstyled mt-3">
+                                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>24/7 Access
+                                    </li>
+                                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>All Equipment
+                                    </li>
+                                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Group Classes
+                                    </li>
+                                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Priority
+                                        Booking</li>
+                                </ul>
+                                <button class="btn btn-info w-100 mt-3">Get Started</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="classes" class="py-5 bg-dark" data-reveal>
+            <div class="container">
+                <h2 class="text-center mb-5">Group Classes & Programs</h2>
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card h-100 shadow-sm text-center">
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <i class="bi bi-lightning-charge feature-icon"></i>
+                                </div>
+                                <h5 class="card-title">HIIT Blast</h5>
+                                <p class="card-text">High-intensity interval training for maximum calorie burn.</p>
+                                <small class="text-muted">Mon/Wed/Fri • 6:00 PM</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card h-100 shadow-sm text-center">
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <i class="bi bi-yin-yang feature-icon"></i>
+                                </div>
+                                <h5 class="card-title">Yoga Flow</h5>
+                                <p class="card-text">Relaxing yoga sessions for flexibility and mindfulness.</p>
+                                <small class="text-muted">Tue/Thu • 7:00 AM</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card h-100 shadow-sm text-center">
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <i class="bi bi-bicycle feature-icon"></i>
+                                </div>
+                                <h5 class="card-title">Spin Class</h5>
+                                <p class="card-text">Energizing cycling workouts to boost endurance.</p>
+                                <small class="text-muted">Mon/Wed/Fri • 5:30 PM</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card h-100 shadow-sm text-center">
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <i class="bi bi-people feature-icon"></i>
+                                </div>
+                                <h5 class="card-title">Strength Training</h5>
+                                <p class="card-text">Build muscle and strength with guided weight sessions.</p>
+                                <small class="text-muted">Tue/Thu/Sat • 8:00 AM</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="gallery" class="py-5" data-reveal>
             <div class="container">
                 <h2 class="text-center mb-5">Our Space & Equipment</h2>
@@ -290,7 +503,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['appointment_submit'])
             </div>
         </section>
 
-        <section id="hours" class="py-5 bg-light" data-reveal>
+        <section id="hours" class="py-5 bg-dark" data-reveal>
             <div class="container">
                 <div class="row g-4 align-items-center">
                     <div class="col-lg-6">
@@ -361,35 +574,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['appointment_submit'])
                     <h5 class="modal-title" id="appointmentModalLabel">Book an Appointment</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="post" action="#" class="needs-validation" novalidate>
+                <form id="appointmentForm" method="post" class="needs-validation" novalidate>
                     <div class="modal-body">
-                        <?php if ($appointmentSuccess): ?>
-                            <div class="alert <?= strpos($appointmentSuccess, 'Thanks') === 0 ? 'alert-success' : 'alert-warning'; ?>"
-                                role="alert">
-                                <?= htmlspecialchars($appointmentSuccess); ?>
-                            </div>
-                        <?php endif; ?>
+                        <div id="appointmentFeedback"></div>
 
                         <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
+                            <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="username" name="username" required
                                 value="<?= htmlspecialchars($_SESSION['user_name'] ?? ''); ?>">
                             <div class="invalid-feedback">Please enter your username.</div>
                         </div>
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email address</label>
+                            <label for="email" class="form-label">Email address <span
+                                    class="text-danger">*</span></label>
                             <input type="email" class="form-control" id="email" name="email" required
                                 value="<?= htmlspecialchars($_SESSION['user_email'] ?? ''); ?>">
-                            <div class="invalid-feedback">Please enter a valid email.</div>
+                            <div class="invalid-feedback">Please enter a valid email address.</div>
                         </div>
                         <div class="row g-3">
                             <div class="col-sm-6">
-                                <label for="date" class="form-label">Preferred Date</label>
+                                <label for="date" class="form-label">Preferred Date <span
+                                        class="text-danger">*</span></label>
                                 <input type="date" class="form-control" id="date" name="date" required>
                                 <div class="invalid-feedback">Please pick a date.</div>
                             </div>
                             <div class="col-sm-6">
-                                <label for="time" class="form-label">Preferred Time</label>
+                                <label for="time" class="form-label">Preferred Time <span
+                                        class="text-danger">*</span></label>
                                 <input type="time" class="form-control" id="time" name="time" required>
                                 <div class="invalid-feedback">Please pick a time.</div>
                             </div>
@@ -398,6 +609,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['appointment_submit'])
                             <label for="goal" class="form-label">What are your goals?</label>
                             <textarea class="form-control" id="goal" name="goal" rows="3"
                                 placeholder="e.g., build strength, lose weight, improve athletic performance"></textarea>
+                            <small class="form-text text-muted">Optional: Tell us about your fitness goals</small>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -410,31 +622,87 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['appointment_submit'])
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/form-handler.js"></script>
     <script src="assets/js/site.js"></script>
     <script>
-        // Bootstrap form validation
-        (function () {
-            'use strict'
-            const forms = document.querySelectorAll('.needs-validation')
-            Array.from(forms).forEach(function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
-                    }
-                    form.classList.add('was-validated')
-                }, false)
-            })
-        })();
+        // Handle appointment form submission
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('appointmentForm');
+            if (!form) return;
 
-        // If the appointment was successful, reopen modal to show the message
-        <?php if ($appointmentSuccess): ?>
-            const appointmentModal = new bootstrap.Modal(document.getElementById('appointmentModal'));
-            appointmentModal.show();
-            if (window.gymgeeks) {
-                gymgeeks.showToast('Appointment request saved! Expect an email from our team soon.', 'success');
-            }
-        <?php endif; ?>
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                if (!form.checkValidity()) {
+                    form.classList.add('was-validated');
+                    return;
+                }
+
+                // Show loading state
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Submitting...';
+
+                // Submit form via AJAX or standard POST
+                const formData = new FormData(form);
+
+                fetch(window.location.href, {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.text())
+                    .then(html => {
+                        // Check if submission was successful by parsing response
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalText;
+
+                        // Display success message
+                        const feedbackDiv = document.getElementById('appointmentFeedback');
+                        feedbackDiv.innerHTML = '<div class="alert alert-success" role="alert">✓ Your appointment request has been submitted! We\'ll contact you soon to confirm.</div>';
+
+                        // Show toast notification
+                        if (window.gymgeeks && window.gymgeeks.showToast) {
+                            window.gymgeeks.showToast('Appointment request saved! Check your email for confirmation.', 'success', 4000);
+                        }
+
+                        // Reset form
+                        setTimeout(() => {
+                            form.reset();
+                            form.classList.remove('was-validated');
+                            feedbackDiv.innerHTML = '';
+
+                            // Close modal after 2 seconds
+                            const modal = bootstrap.Modal.getInstance(document.getElementById('appointmentModal'));
+                            if (modal) modal.hide();
+                        }, 2000);
+                    })
+                    .catch(error => {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalText;
+
+                        const feedbackDiv = document.getElementById('appointmentFeedback');
+                        feedbackDiv.innerHTML = '<div class="alert alert-danger" role="alert">✗ Error submitting form. Please try again.</div>';
+
+                        console.error('Error:', error);
+                    });
+            });
+
+            // Show existing feedback if appointment was just submitted
+            <?php if ($appointmentSuccess): ?>
+                const feedbackDiv = document.getElementById('appointmentFeedback');
+                const messageType = <?= json_encode(strpos($appointmentSuccess, 'Thanks') === 0 ? 'success' : 'warning'); ?>;
+                feedbackDiv.innerHTML = '<div class="alert alert-' + messageType + '" role="alert"><?= addslashes(htmlspecialchars($appointmentSuccess)); ?></div>';
+
+                // Show modal with success message
+                const modal = new bootstrap.Modal(document.getElementById('appointmentModal'));
+                modal.show();
+
+                if (window.gymgeeks && window.gymgeeks.showToast) {
+                    window.gymgeeks.showToast('Appointment request saved!', messageType === 'success' ? 'success' : 'warning', 4000);
+                }
+            <?php endif; ?>
+        });
     </script>
 </body>
 

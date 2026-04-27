@@ -129,39 +129,31 @@ $workouts = $result->fetch_all(MYSQLI_ASSOC);
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <form method="POST">
-        <div class="modal-header">
+        <div class="modal-header bg-danger text-white">
           <h5 class="modal-title">Confirm Delete</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p>Are you sure you want to delete <span id="workoutTitlePlaceholder" class="fw-bold"></span>?</p>
+          <p>Are you sure you want to delete <span id="workoutTitlePlaceholder" class="fw-bold text-danger"></span>?</p>
+          <p class="small text-muted">This action cannot be undone.</p>
           <input type="hidden" name="delete_id" id="deleteWorkoutId">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-danger">Delete</button>
+          <button type="submit" class="btn btn-danger">Delete Permanently</button>
         </div>
       </form>
     </div>
   </div>
 </div>
 
+</body>
+
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/js/form-handler.js"></script>
 <script>
-  document.querySelectorAll('.delete-workout-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const workoutId = btn.getAttribute('data-workout-id');
-      const workoutTitle = btn.getAttribute('data-workout-title');
-      document.getElementById('deleteWorkoutId').value = workoutId;
-      document.getElementById('workoutTitlePlaceholder').innerText = workoutTitle;
-      const modal = new bootstrap.Modal(document.getElementById('deleteWorkoutModal'));
-      modal.show();
-    });
-  });
-</script>
-
-<script>
+  // Handle delete workout button clicks
   document.querySelectorAll('.delete-workout-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const workoutId = btn.getAttribute('data-workout-id');

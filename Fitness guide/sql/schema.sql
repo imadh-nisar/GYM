@@ -3,9 +3,9 @@
 -- Run this file once to initialize the database (e.g. via mysql < schema.sql).
 
 -- WARNING: The statements below will drop existing database/tables and replace them.
-DROP DATABASE IF EXISTS uni_gym;
-CREATE DATABASE uni_gym;
-USE uni_gym;
+
+CREATE DATABASE unigym;
+USE unigym;
 
 -- Admins table (used for admin login and dashboard management)
 CREATE TABLE IF NOT EXISTS admins (
@@ -17,11 +17,13 @@ CREATE TABLE IF NOT EXISTS admins (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Users table (used for user login and storing measurements)
+-- Status: 'pending' = waiting for admin approval, 'approved' = can login, 'rejected' = rejected, 'deleted' = soft deleted
 CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(100) UNIQUE NOT NULL,
   email VARCHAR(150) UNIQUE NOT NULL,
   password VARCHAR(255) NOT NULL,
+  status ENUM('pending', 'approved', 'rejected', 'deleted') DEFAULT 'pending',
   weight FLOAT DEFAULT NULL,
   height FLOAT DEFAULT NULL,
   chest FLOAT DEFAULT NULL,
@@ -29,7 +31,8 @@ CREATE TABLE IF NOT EXISTS users (
   arms FLOAT DEFAULT NULL,
   legs FLOAT DEFAULT NULL,
   bmi FLOAT DEFAULT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Workout templates (used to generate workout plans for users)
@@ -55,6 +58,28 @@ CREATE TABLE IF NOT EXISTS meal_templates (
   bmi_min DECIMAL(5,2) DEFAULT NULL,
   bmi_max DECIMAL(5,2) DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- User selected workouts (user adds from available templates)
+CREATE TABLE IF NOT EXISTS user_workouts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  workout_id INT NOT NULL,
+  added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (workout_id) REFERENCES workout_templates(id) ON DELETE CASCADE,
+  UNIQUE KEY unique_user_workout (user_id, workout_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- User selected meals (user adds from available templates)
+CREATE TABLE IF NOT EXISTS user_meals (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  meal_id INT NOT NULL,
+  added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (meal_id) REFERENCES meal_templates(id) ON DELETE CASCADE,
+  UNIQUE KEY unique_user_meal (user_id, meal_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Appointments (booked via the landing page)
